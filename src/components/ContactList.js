@@ -2,25 +2,25 @@ import ContactDetails from './ContactDetails';
 import contactService from '../services/contacts';
 
 const ContactList = ({ persons, setPersons }) => {
-  const asyncDeleteContact = async (id) => {
-    let deleteIdx = contactService.findPersonIdx(id, persons);
-
-    if (window.confirm(`Delete ${persons[deleteIdx].name}?`)) {
-      try {
-        await contactService.deleteContact(id);
-
-        let newPersons = [...persons];
-        newPersons.splice(deleteIdx, 1);
-
-        setPersons(newPersons);
-      } catch {
-        alert('Failed to delete');
-      }
-    }
-  }
-
   const clickDeleteHandler = (event) => {
-    asyncDeleteContact(Number(event.target.dataset.id));
+    let id = event.target.dataset.id;
+
+    (async () => {
+      let deleteIdx = contactService.findPersonIdx(id, persons);
+
+      if (window.confirm(`Delete ${persons[deleteIdx].name}?`)) {
+        try {
+          await contactService.deleteContact(id);
+
+          let newPersons = [...persons];
+          newPersons.splice(deleteIdx, 1);
+
+          setPersons(newPersons);
+        } catch {
+          alert('Failed to delete');
+        }
+      }
+    })();
   };
 
   return persons.map((person) => {
